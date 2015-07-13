@@ -109,8 +109,38 @@ RSpec.describe Escapement::HTML do
 
     it "has the correct attributes for the entities" do
       es.extract!
-      
+
       expect(entities[0][:attributes]).to eq({ "href" => "http://google.com" })
+    end
+  end
+
+  context "complex HTML" do
+    context "lists" do
+      let (:html) do
+        %{<p>Some thoughts: <ul><li>Yes</li><li><strong>No</strong></li></ul></p>}
+      end
+      let(:entities) { es.results[1][:entities] }
+
+      before(:each) { es.extract! }
+
+      it "treats lists as a separate paragraph" do
+        expect(es.results.size).to eq 2
+      end
+
+      it "gets the correct name for lists" do
+        expect(entities[0][:type]).to eq 'list_item'
+        expect(entities[1][:type]).to eq 'list_item'
+      end
+
+      it "finds the correct positions for the list items" do
+        expect(entities[0][:position]).to eq [0, 3]
+        expect(entities[1][:position]).to eq [3, 5]
+      end
+
+      it "grabs entities inside of list items" do
+        expect(entities[2][:html_tag]).to eq 'strong'
+        expect(entities[2][:type]).to eq 'bold'
+      end
     end
   end
 end

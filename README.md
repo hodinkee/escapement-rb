@@ -20,25 +20,14 @@ Or install it yourself as:
 
 ## Usage
 
-Basic usage is very straightforward. By default, all text must be wrapped in `<p>` tags. Each root-level `<p>` tag will be parsed as a separate paragraph, and will be a separate object in the results array.
+Basic usage is very straightforward. Escapement will consider all root-level tags as separate paragraphs.
 
-The position values are 0-based and are relative to the plain text result. The first value is the start of the tag, and the second is the end of the tag.
+The position values are 0-based and are relative to the plain text result. The first value is the start of the attributed text, and the second is the end of the attributed text.
 
 ``` ruby
-body = "<p>Escapement is <strong>great</strong>!</p>"
+body = "<p>Isn't <i>Tourbillon</i> a <a href=\"http://google.com\">great</a> word?</p>"
 
 html = Escapement::HTML.new(body)
-html.extract!
-html.results
-#=> [{:text=>"Escapement is great!", :entities=>[{:type=>"bold", :html_tag=>"strong", :position=>[14, 19], :attributes=>{}}]}] 
-```
-
-You can override the root tag setting with any CSS selector, if needed.
-
-``` ruby
-body = "<span>Isn't <i>Tourbillon</i> a <a href=\"http://google.com\">great</a> word?</span>"
-
-html = Escapement::HTML.new(body, 'span')
 html.extract!
 html.results
 # => [{:text=>"Isn't Tourbillon a great word?", :entities=>[{:type=>"italic", :html_tag=>"i", :position=>[6, 16], :attributes=>{}}, {:type=>"link", :html_tag=>"a", :position=>[19, 24], :attributes=>{"href"=>"http://google.com"}}]}] 

@@ -27,9 +27,15 @@ module Escapement
       case node.name
       when 'p' then 'paragraph'
       when 'a' then 'link'
-      when 'i' then 'italic'
+      when 'i', 'em' then 'italic'
       when 'u' then 'underline'
       when 'strong', 'b' then 'bold'
+      when 'abbr' then 'abbreviation'
+      when 'q' then 'quote'
+      when 'pre' then 'preformatted'
+      when 'img' then 'image'
+      when 'li' then 'list_item'
+      when /h\d/ then 'header'
       else node.name
       end
     end

@@ -3,5 +3,9 @@ module Escapement
     def a(key, value)
       true if key == "href"
     end
+
+    def img(key, value)
+      true if key == "src"
+    end
   end
 end
