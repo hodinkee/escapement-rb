@@ -142,5 +142,27 @@ RSpec.describe Escapement::HTML do
         expect(entities[2][:type]).to eq 'bold'
       end
     end
+
+    context "images" do
+      let (:html) do
+        %{<p>Lorem ipsum <img src="http://example.com/image.png" width="200" height="300" class="foobar" /> dolor sit amet.</p>}
+      end
+      let (:entities) { es.results[0][:entities] }
+
+      before(:each) { es.extract! }
+
+      it "correctly parses the entity" do
+        expect(entities.size).to eq 1
+        expect(entities[0][:type]).to eq 'image'
+      end
+
+      it "has the correct position" do
+        expect(entities[0][:position]).to eq [12, 12]
+      end
+
+      it "has the correct attributes" do
+        expect(entities[0][:attributes]).to eq({ 'src' => 'http://example.com/image.png', 'width' => '200', 'height' => '300' })
+      end
+    end
   end
 end

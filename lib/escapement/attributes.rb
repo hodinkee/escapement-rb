@@ -5,7 +5,7 @@ module Escapement
     end
 
     def img(key, value)
-      true if key == "src"
+      true if ['src', 'width', 'height'].include?(key)
     end
   end
 end
