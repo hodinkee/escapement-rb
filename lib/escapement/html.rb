@@ -9,7 +9,7 @@ module Escapement
       @results = nil
     end
 
-    def extract
+    def extract!
       @blocks = doc.css(tag).map { |child| Block.new(child).tap(&:process!) }
       @results = @blocks.map(&:result)
     end
