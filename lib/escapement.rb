@@ -1,5 +1,6 @@
 require "nokogiri"
 require "escapement/traversal"
+require "escapement/attributes"
 require "escapement/block"
 require "escapement/html"
 require "escapement/tag"

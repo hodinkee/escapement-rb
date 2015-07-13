@@ -75,4 +75,42 @@ RSpec.describe Escapement::HTML do
       expect(entities[2][:position]).to eq [18, 21]
     end
   end
+
+  context "tags with attributes" do
+    let (:html) do
+      %{<p class="foobar">This is a <a href="http://google.com" target="_blank">link</a>.</p>}
+    end
+    let (:entities) { es.results.first[:entities] }
+
+    it "parses without error" do
+      expect {
+        es.extract!
+      }.to_not raise_error
+
+      expect(es.blocks).to be_an_instance_of(Array)
+      expect(es.results).to be_an_instance_of(Array)
+    end
+
+    it "identifies the correct number of entities" do
+      es.extract!
+
+      expect(es.blocks.size).to eq 1
+      expect(es.results.size).to eq 1
+
+      expect(entities.size).to eq 1
+    end
+
+    it "has the correct positions for the entities" do
+      es.extract!
+
+      expect(entities[0][:html_tag]).to eq 'a'
+      expect(entities[0][:position]).to eq [10, 14]
+    end
+
+    it "has the correct attributes for the entities" do
+      es.extract!
+      
+      expect(entities[0][:attributes]).to eq({ "href" => "http://google.com" })
+    end
+  end
 end

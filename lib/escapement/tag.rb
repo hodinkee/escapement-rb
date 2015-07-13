@@ -15,7 +15,7 @@ module Escapement
         type: node_to_type,
         html_tag: node.name,
         position: [@current_position, @current_position + node.text.length],
-        attributes: Hash[node.attributes.map { |k, v| [k, v.value] }]
+        attributes: Hash[filtered_attributes.map { |k, v| [k, v.value] }]
       }
 
       process_children
@@ -32,6 +32,11 @@ module Escapement
       when 'strong', 'b' then 'bold'
       else node.name
       end
+    end
+
+    def filtered_attributes
+      return node.attributes unless Attributes.respond_to?(node.name)
+      node.attributes.select(&Attributes.method(node.name))
     end
   end
 end
