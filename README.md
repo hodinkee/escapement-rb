@@ -27,6 +27,7 @@ body = "<p>Escapement is <strong>great</strong>!</p>"
 
 html = Escapement::HTML.new(body)
 results = html.extract
+#=> [{:text=>"Escapement is great!", :entities=>[{:type=>"bold", :html_tag=>"strong", :position=>[14, 19], :attributes=>{}}]}] 
 ```
 
 In order to prevent over-engineering, there are some restrictions for the format of the HTML given to escapement.
@@ -34,10 +35,11 @@ In order to prevent over-engineering, there are some restrictions for the format
 By default, all text must be wrapped in `<p>` tags. You can override this setting with any CSS selector, if needed.
 
 ``` ruby
-body = "<span>Isn't <i>Tourbillon</i> a great word?</span>"
+body = "<span>Isn't <i>Tourbillon</i> a <a href=\"http://google.com\">great</a> word?</span>"
 
-html = Escapement::HTML.new(body, tag: 'span')
+html = Escapement::HTML.new(body, 'span')
 results = html.extract
+# => [{:text=>"Isn't Tourbillon a great word?", :entities=>[{:type=>"italic", :html_tag=>"i", :position=>[6, 16], :attributes=>{}}, {:type=>"link", :html_tag=>"a", :position=>[19, 24], :attributes=>{"href"=>"http://google.com"}}]}] 
 ```
 
 ## Development
