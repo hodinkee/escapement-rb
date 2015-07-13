@@ -33,6 +33,10 @@ html.results
 # => [{:text=>"Isn't Tourbillon a great word?", :entities=>[{:type=>"italic", :html_tag=>"i", :position=>[6, 16], :attributes=>{}}, {:type=>"link", :html_tag=>"a", :position=>[19, 24], :attributes=>{"href"=>"http://google.com"}}]}] 
 ```
 
+## How It Works
+
+From a high level, Escapement uses [Nokogiri](https://github.com/sparklemotion/nokogiri) to recursively traverse the DOM tree. As it traverses, it keeps track of the current position of the node relative to the text content in order to determine entity position. There are no regular expression hacks involved.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.

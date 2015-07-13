@@ -1,4 +1,7 @@
 module Escapement
+  # A tag represents an entity that may or may not have child elements.
+  # Once we extract the data about this DOM node, we recursively continue
+  # the traversal until we reach the leaf text node.
   class Tag
     include Traversal
 
@@ -17,7 +20,7 @@ module Escapement
         position: [@current_position, @current_position + node.text.length],
         attributes: Hash[filtered_attributes.map { |k, v| [k, v.value] }]
       }
-
+      
       process_children
     end
 
