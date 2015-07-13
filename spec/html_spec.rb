@@ -164,5 +164,22 @@ RSpec.describe Escapement::HTML do
         expect(entities[0][:attributes]).to eq({ 'src' => 'http://example.com/image.png', 'width' => '200', 'height' => '300' })
       end
     end
+
+    context "HTML escaped characters" do
+      let (:html) do
+        %{<p>This &amp; that <strong>these &mdash; those</strong></p>}
+      end
+      let (:entities) { es.results[0][:entities] }
+
+      before(:each) { es.extract! }
+
+      it "decodes HTML entities" do
+        expect(es.results[0][:text]).to eq "This & that these — those"
+      end
+
+      it "gives the correct positions based on the decoded text" do
+        expect(entities[0][:position]).to eq [12, 25]
+      end
+    end
   end
 end

@@ -41,8 +41,8 @@ module Escapement
     end
 
     def filtered_attributes
-      return node.attributes unless Attributes.respond_to?(node.name)
-      node.attributes.select(&Attributes.method(node.name))
+      method_name = Attributes.respond_to?(node.name) ? node.name : :default
+      node.attributes.select(&Attributes.method(method_name))
     end
   end
 end
