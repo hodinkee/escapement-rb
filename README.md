@@ -22,6 +22,8 @@ Or install it yourself as:
 
 Basic usage is very straightforward. By default, all text must be wrapped in `<p>` tags. Each root-level `<p>` tag will be parsed as a separate paragraph, and will be a separate object in the results array.
 
+The position values are 0-based and are relative to the plain text result. The first value is the start of the tag, and the second is the end of the tag.
+
 ``` ruby
 body = "<p>Escapement is <strong>great</strong>!</p>"
 
