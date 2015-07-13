@@ -1,0 +1,6 @@
+require "nokogiri"
+require "escapement/traversal"
+require "escapement/block"
+require "escapement/html"
+require "escapement/tag"
+require "escapement/version"
