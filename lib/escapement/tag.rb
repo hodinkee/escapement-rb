@@ -28,6 +28,7 @@ module Escapement
       when 'p' then 'paragraph'
       when 'a' then 'link'
       when 'i' then 'italic'
+      when 'u' then 'underline'
       when 'strong', 'b' then 'bold'
       else node.name
       end
