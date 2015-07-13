@@ -1,6 +1,6 @@
 # Escapement
 
-Given a HTML formatted string, escapement will extract child tags into a device agnostic attributes array that can be used for formatting the text anywhere.
+Given a HTML formatted string, escapement will extract descendant tags into a device agnostic attributes array that can be used for formatting the text anywhere.
 
 ## Installation
 
@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-Basic usage is very straightforward.
+Basic usage is very straightforward. By default, all text must be wrapped in `<p>` tags. Each root-level `<p>` tag will be parsed as a separate paragraph, and will be a separate object in the results array.
 
 ``` ruby
 body = "<p>Escapement is <strong>great</strong>!</p>"
@@ -30,9 +30,7 @@ results = html.extract
 #=> [{:text=>"Escapement is great!", :entities=>[{:type=>"bold", :html_tag=>"strong", :position=>[14, 19], :attributes=>{}}]}] 
 ```
 
-In order to prevent over-engineering, there are some restrictions for the format of the HTML given to escapement.
-
-By default, all text must be wrapped in `<p>` tags. You can override this setting with any CSS selector, if needed.
+You can override the root tag setting with any CSS selector, if needed.
 
 ``` ruby
 body = "<span>Isn't <i>Tourbillon</i> a <a href=\"http://google.com\">great</a> word?</span>"
