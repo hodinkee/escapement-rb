@@ -181,5 +181,17 @@ RSpec.describe Escapement::HTML do
         expect(entities[0][:position]).to eq [12, 25]
       end
     end
+
+    context "double newlines" do
+      let (:html) do
+        %{<p>Paragraph 1</p>\r\n\r\n<p>Paragraph 2</p>}
+      end
+
+      before(:each) { es.extract! }
+
+      it "results in 2 blocks" do
+        expect(es.results.size).to eq 2
+      end
+    end
   end
 end

@@ -14,6 +14,8 @@ module Escapement
     end
 
     def process!
+      return if node.text.strip.empty?
+
       process_children
 
       @result = {

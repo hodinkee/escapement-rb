@@ -14,7 +14,7 @@ module Escapement
     # Extracts all of the entities for each paragraph/block.
     def extract!
       @blocks = doc.css('body').children.map { |child| Block.new(child).tap(&:process!) }
-      @results = @blocks.map(&:result)
+      @results = @blocks.reject { |b| b.result.nil? }.map(&:result)
     end
   end
 end
