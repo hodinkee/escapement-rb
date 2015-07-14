@@ -20,7 +20,7 @@ module Escapement
         position: [@current_position, @current_position + node.text.length],
         attributes: Hash[filtered_attributes.map { |k, v| [k, v.value] }]
       }
-      
+
       process_children
     end
 
@@ -38,6 +38,9 @@ module Escapement
       when 'pre' then 'preformatted'
       when 'img' then 'image'
       when 'li' then 'list_item'
+      when 'sup' then 'superscript'
+      when 'sub' then 'subscript'
+      when 'br' then 'line_break'
       when /h\d/ then 'header'
       else node.name
       end
