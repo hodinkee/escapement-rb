@@ -14,7 +14,10 @@ module Escapement
     end
 
     def process!
-      return if node.text.strip.empty?
+      # This will match empty strings, strings with spaces, and
+      # even strings with unicode non-breakable spaces (which can be
+      # produced by &nbsp;)
+      return if node.text =~ /\A[[:space:]]*\z/
 
       process_children
 

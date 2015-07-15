@@ -193,5 +193,17 @@ RSpec.describe Escapement::HTML do
         expect(es.results.size).to eq 2
       end
     end
+
+    context "non-breakable space paragraphs" do
+      let (:html) do
+        %{<p>&nbsp;</p>}
+      end
+
+      before(:each) { es.extract! }
+
+      it "discards paragraphs with only non-breakable space characters" do
+        expect(es.results.size).to eq 0
+      end
+    end
   end
 end
