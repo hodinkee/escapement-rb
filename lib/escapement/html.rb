@@ -13,8 +13,27 @@ module Escapement
 
     # Extracts all of the entities for each paragraph/block.
     def extract!
+      preprocess!
+
       @blocks = doc.css('body').children.map { |child| Block.new(child).tap(&:process!) }
       @results = @blocks.reject { |b| b.result.nil? }.map(&:result)
+    end
+
+    private
+
+    # Run a preprocess pass on the HTML in order to format certain entities
+    # before we start recording entity positions.
+    def preprocess!(node = @doc)
+      node.children.each do |child|
+        preprocess_node(child)
+        preprocess!(child)
+      end
+    end
+
+    def preprocess_node(node)
+      if node.name == 'br'
+        node.replace Nokogiri::XML::Text.new("\n", @doc)
+      end
     end
   end
 end

@@ -205,5 +205,20 @@ RSpec.describe Escapement::HTML do
         expect(es.results.size).to eq 0
       end
     end
+
+    context "<br> tags" do
+      let (:html) do
+        %{<p>This is<br>a test</p>}
+      end
+      let (:entities) { es.results[0][:entities] }
+
+      before(:each) { es.extract! }
+
+      it "converts a line break tag to a newline" do
+        result = es.results[0]
+        expect(result[:text]).to eq "This is\na test"
+        expect(entities).to be_empty
+      end
+    end
   end
 end
