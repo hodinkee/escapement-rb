@@ -40,7 +40,6 @@ module Escapement
       when 'li' then 'list_item'
       when 'sup' then 'superscript'
       when 'sub' then 'subscript'
-      when 'br' then 'line_break'
       when /h\d/ then 'header'
       else node.name
       end
