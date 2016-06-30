@@ -208,7 +208,7 @@ RSpec.describe Escapement::HTML do
 
     context "<br> tags" do
       let (:html) do
-        %{<p>This is<br>a test</p>}
+        %{<p>This is<br>a <i>test<br/>okay</i></p>}
       end
       let (:entities) { es.results[0][:entities] }
 
@@ -216,8 +216,9 @@ RSpec.describe Escapement::HTML do
 
       it "converts a line break tag to a newline" do
         result = es.results[0]
-        expect(result[:text]).to eq "This is\na test"
-        expect(entities).to be_empty
+        expect(result[:text]).to eq "This is\na test\nokay"
+        expect(entities.size).to eq 1
+        expect(entities[0][:type]).to eq 'italic'
       end
     end
   end
