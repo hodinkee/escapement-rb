@@ -30,7 +30,7 @@ body = "<p>Isn't <i>Tourbillon</i> a <a href=\"http://google.com\">great</a> wor
 html = Escapement::HTML.new(body)
 html.extract!
 html.results
-# => [{:text=>"Isn't Tourbillon a great word?", :entities=>[{:type=>"italic", :html_tag=>"i", :position=>[6, 16], :attributes=>{}}, {:type=>"link", :html_tag=>"a", :position=>[19, 24], :attributes=>{"href"=>"http://google.com"}}]}]
+# => [{:type=>"paragraph", :html_tag=>"p", :text=>"Isn't Tourbillon a great word?", :entities=>[{:type=>"italic", :html_tag=>"i", :position=>[6, 16], :attributes=>{}}, {:type=>"link", :html_tag=>"a", :position=>[19, 24], :attributes=>{"href"=>"http://google.com"}}]}]
 ```
 
 Escapement also supports lists (with nesting), which treats each list item as a separate paragraph-like element.
