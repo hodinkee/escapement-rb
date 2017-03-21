@@ -23,6 +23,8 @@ module Escapement
           return type.new(node)
         end
       end
+
+      nil
     end
   end
 end

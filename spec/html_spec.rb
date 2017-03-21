@@ -14,14 +14,14 @@ RSpec.describe Escapement::HTML do
         es.extract!
       }.to_not raise_error
 
-      expect(es.blocks).to be_an_instance_of(Array)
+      expect(es.elements).to be_an_instance_of(Array)
       expect(es.results).to be_an_instance_of(Array)
     end
 
     it "identifies the correct number of entities" do
       es.extract!
 
-      expect(es.blocks.size).to eq 1
+      expect(es.elements.size).to eq 1
       expect(es.results.size).to eq 1
 
       expect(entities.size).to eq 2
@@ -49,14 +49,14 @@ RSpec.describe Escapement::HTML do
         es.extract!
       }.to_not raise_error
 
-      expect(es.blocks).to be_an_instance_of(Array)
+      expect(es.elements).to be_an_instance_of(Array)
       expect(es.results).to be_an_instance_of(Array)
     end
 
     it "identifies the correct number of entities" do
       es.extract!
 
-      expect(es.blocks.size).to eq 1
+      expect(es.elements.size).to eq 1
       expect(es.results.size).to eq 1
 
       expect(entities.size).to eq 3
@@ -87,14 +87,14 @@ RSpec.describe Escapement::HTML do
         es.extract!
       }.to_not raise_error
 
-      expect(es.blocks).to be_an_instance_of(Array)
+      expect(es.elements).to be_an_instance_of(Array)
       expect(es.results).to be_an_instance_of(Array)
     end
 
     it "identifies the correct number of entities" do
       es.extract!
 
-      expect(es.blocks.size).to eq 1
+      expect(es.elements.size).to eq 1
       expect(es.results.size).to eq 1
 
       expect(entities.size).to eq 1
@@ -117,9 +117,9 @@ RSpec.describe Escapement::HTML do
   context "complex HTML" do
     context "lists" do
       let (:html) do
-        %{<p>Some thoughts: <ul><li>Yes</li><li><strong>No</strong></li></ul></p>}
+        %{<p>Some thoughts:</p><ul><li>Yes</li><li><strong>No</strong></li></ul>}
       end
-      let(:entities) { es.results[1][:entities] }
+      let(:list) { es.results[1] }
 
       before(:each) { es.extract! }
 
@@ -127,19 +127,44 @@ RSpec.describe Escapement::HTML do
         expect(es.results.size).to eq 2
       end
 
-      it "gets the correct name for lists" do
-        expect(entities[0][:type]).to eq 'list_item'
-        expect(entities[1][:type]).to eq 'list_item'
+      it "correctly identifies lists" do
+        expect(list[:type]).to eq 'unordered_list'
       end
 
-      it "finds the correct positions for the list items" do
-        expect(entities[0][:position]).to eq [0, 3]
-        expect(entities[1][:position]).to eq [3, 5]
+      it "treats list items as separate entities" do
+        expect(list[:children].size).to eq 2
+        expect(list[:children].all? { |item| item[:type] == 'list_item' }).to be_truthy
       end
 
-      it "grabs entities inside of list items" do
-        expect(entities[2][:html_tag]).to eq 'strong'
-        expect(entities[2][:type]).to eq 'bold'
+      it "parses entities in list items" do
+        entities = list[:children][1][:entities]
+        expect(entities.size).to eq 1
+        expect(entities[0][:type]).to eq 'bold'
+        expect(entities[0][:html_tag]).to eq 'strong'
+        expect(entities[0][:position]).to eq [0, 2]
+      end
+
+      context "nested" do
+        let (:html) do
+          %{<ul><li>List item 1</li><ul><li>Nested <b>item</b></li></ul><li>List item 2</li></ul>}
+        end
+        let (:list) { es.results[0] }
+        let (:list2) { es.results[0][:children][1] }
+
+        it "supports list nesting" do
+          expect(es.results.size).to eq 1
+          expect(list[:children].size).to eq 3
+          expect(list2[:type]).to eq 'unordered_list'
+          expect(list2[:children].size).to eq 1
+          expect(list2[:children][0][:type]).to eq 'list_item'
+        end
+
+        it "correctly parses entities on nested list items" do
+          expect(list2[:children][0][:entities].size).to eq 1
+          expect(list2[:children][0][:entities][0][:type]).to eq 'bold'
+          expect(list2[:children][0][:entities][0][:html_tag]).to eq 'b'
+          expect(list2[:children][0][:entities][0][:position]).to eq [7, 11]
+        end
       end
     end
 
@@ -189,7 +214,7 @@ RSpec.describe Escapement::HTML do
 
       before(:each) { es.extract! }
 
-      it "results in 2 blocks" do
+      it "results in 2 elements" do
         expect(es.results.size).to eq 2
       end
     end

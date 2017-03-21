@@ -15,8 +15,8 @@ module Escapement
     def extract!
       preprocess!
 
-      @elements = doc.css('body').children.map { |child| Element.factory(child).tap(&:process!) }
-      @results = @elements.reject { |b| b.result.nil? }.map(&:result)
+      @elements = doc.css('body').children.map { |child| Element.factory(child) }.compact
+      @results = @elements.each(&:process!).reject { |e| e.result.nil? }.map(&:result)
     end
 
     private
