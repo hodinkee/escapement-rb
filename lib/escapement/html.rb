@@ -1,22 +1,22 @@
 module Escapement
   # Wrapper around the entire document, which contains an array of
   # results. Each result is the text value and entities for a single
-  # paragraph/block.
+  # element.
   class HTML
-    attr_reader :doc, :blocks, :results
+    attr_reader :doc, :elements, :results
 
     def initialize(html)
       @doc = Nokogiri::HTML(html)
-      @blocks = []
+      @elements = []
       @results = nil
     end
 
-    # Extracts all of the entities for each paragraph/block.
+    # Extracts all of the entities for each element.
     def extract!
       preprocess!
 
-      @blocks = doc.css('body').children.map { |child| Block.new(child).tap(&:process!) }
-      @results = @blocks.reject { |b| b.result.nil? }.map(&:result)
+      @elements = doc.css('body').children.map { |child| Element.factory(child).tap(&:process!) }
+      @results = @elements.reject { |b| b.result.nil? }.map(&:result)
     end
 
     private

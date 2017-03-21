@@ -2,7 +2,7 @@ module Escapement
   module Traversal
     # Processes all child nodes of the current node. As the recursion unwinds, we
     # update the entities array such that we're left with a full result set at
-    # the root, which is the Block object.
+    # the root, which is the Element object.
     def process_children
       node.children.each do |child|
         if child.text?
