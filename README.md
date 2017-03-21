@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-Basic usage is very straightforward. Escapement will consider all root-level tags as separate paragraphs.
+Basic usage is very straightforward. Escapement will consider all root-level tags as separate elements.
 
 The position values are 0-based and are relative to the plain text result. The first value is the start of the attributed text, and the second is the end of the attributed text.
 
@@ -30,7 +30,19 @@ body = "<p>Isn't <i>Tourbillon</i> a <a href=\"http://google.com\">great</a> wor
 html = Escapement::HTML.new(body)
 html.extract!
 html.results
-# => [{:text=>"Isn't Tourbillon a great word?", :entities=>[{:type=>"italic", :html_tag=>"i", :position=>[6, 16], :attributes=>{}}, {:type=>"link", :html_tag=>"a", :position=>[19, 24], :attributes=>{"href"=>"http://google.com"}}]}] 
+# => [{:text=>"Isn't Tourbillon a great word?", :entities=>[{:type=>"italic", :html_tag=>"i", :position=>[6, 16], :attributes=>{}}, {:type=>"link", :html_tag=>"a", :position=>[19, 24], :attributes=>{"href"=>"http://google.com"}}]}]
+```
+
+Escapement also supports lists (with nesting), which treats each list item as a separate paragraph-like element.
+
+``` ruby
+body = "<ul><li>List item 1</li><ul><li><b>Nested</b> list item</li></ul><li>List item 2</li></ul>"
+
+html = Escapement::HTML.new(body)
+html.extract!
+html.results
+
+# => [{:type=>"unordered_list", :html_tag=>"ul", :children=>[{:type=>"list_item", :html_tag=>"li", :text=>"List item 1", :entities=>[]}, {:type=>"unordered_list", :html_tag=>"ul", :children=>[{:type=>"list_item", :html_tag=>"li", :text=>"Nested list item", :entities=>[{:type=>"bold", :html_tag=>"b", :position=>[0, 6], :attributes=>{}}]}]}, {:type=>"list_item", :html_tag=>"li", :text=>"List item 2", :entities=>[]}]}]
 ```
 
 ## How It Works
